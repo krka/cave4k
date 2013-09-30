@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
@@ -91,6 +93,13 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       g.translate(-x, y);
       g.fillPolygon(block);
       g.translate(x, -y);
+
+      Ellipse2D.Double body = new Ellipse2D.Double(-10 + x, -10 - y, 20, 20);
+      Area areaA = new Area(body);
+      areaA.intersect(new Area(block));
+      if (!areaA.isEmpty()) {
+        running = false;
+      }
 
       g.dispose();
       bufferStrategy.show();
