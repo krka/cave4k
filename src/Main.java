@@ -15,8 +15,8 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private static final double MAX_SPEED = 2.0;
   private boolean running = true;
   private final JFrame frame;
-  double x;
-  double y;
+  double x = 130;
+  double y = -150;
   double angle;
   double speedX, speedY;
   private int rotateLeft;
@@ -25,7 +25,14 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private boolean died;
 
   private Polygon[] walls = new Polygon[]{
-          new Polygon(new int[]{-100, 100, 100, -100}, new int[]{-100, -100, -70, -70}, 4)
+          new Polygon(new int[]{57, 559, 559, 57}, new int[]{83, 83, 100, 100}, 4),
+          new Polygon(new int[]{57, 77, 77, 57}, new int[]{112, 112, 340, 340}, 4),
+          new Polygon(new int[]{85, 433, 433, 85}, new int[]{309, 309, 331, 331}, 4),
+          new Polygon(new int[]{557, 582, 582, 557}, new int[]{89, 89, 834, 834}, 4),
+          new Polygon(new int[]{65, 427, 427, 65}, new int[]{498, 498, 515, 515}, 4),
+          new Polygon(new int[]{54, 76, 76, 54}, new int[]{346, 346, 954, 954}, 4),
+          new Polygon(new int[]{242, 556, 556, 242}, new int[]{775, 775, 800, 800}, 4),
+          new Polygon(new int[]{42, 573, 573, 42}, new int[]{952, 952, 960, 960}, 4),
   };
 
   public static void main(String[] args) {
