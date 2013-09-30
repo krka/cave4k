@@ -9,8 +9,8 @@ import java.util.Random;
 
 public class Main extends JPanel implements KeyListener, WindowListener {
   public static final int NUM_STARS = 200;
-  private static final double ACCEL = 0.000000001;
-  private static final double MAX_SPEED = 0.10;
+  private static final double ACCEL = 0.00000001;
+  private static final double MAX_SPEED = 2.0;
   private boolean running = true;
   private final JFrame frame;
   double x;
@@ -64,8 +64,8 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         int scale = 10 + 2*level;
         int color = 60 + level * 60;
         g.setColor(new Color(color, color, color));
-        int x2 = (int) (-x * scale + 800 * scale * starX[i]) % 800;
-        int y2 = (int) (y * scale + 600 * scale * starY[i]) % 600;
+        int x2 = (int) (-x * scale * 0.2 + 800 * scale * starX[i]) % 800;
+        int y2 = (int) (y * scale * 0.2 + 600 * scale * starY[i]) % 600;
         x2 = (800 + x2) % 800;
         y2 = (600 + y2) % 600;
         g.fillOval(x2, y2, 1 + level, 1 + level);
