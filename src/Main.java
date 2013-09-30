@@ -22,6 +22,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private int rotateLeft;
   private int rotateRight;
   private int throttle;
+  private boolean died;
 
   private Polygon[] walls = new Polygon[]{
           new Polygon(new int[]{-100, 100, 100, -100}, new int[]{-100, -100, -70, -70}, 4)
@@ -107,6 +108,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         areaA.intersect(new Area(p));
         if (!areaA.isEmpty()) {
             running = false;
+            died = true;
         }
       }
 
@@ -118,6 +120,11 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       } catch (InterruptedException e) {
       }
     }
+
+    if (died) {
+        System.out.println("You died!");
+    }
+
     frame.dispose();
   }
 
