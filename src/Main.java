@@ -83,12 +83,9 @@ public class Main extends JPanel implements KeyListener, WindowListener {
             speedX = speedX * MAX_SPEED / foo;
             speedY = speedY * MAX_SPEED / foo;
         }
-        x += speedX;
-        y += speedY;
-      } else {
-        speedX = 0;
-        speedY = 0;
       }
+      x += speedX;
+      y += speedY;
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 800, 600);
 
