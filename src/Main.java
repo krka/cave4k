@@ -1,5 +1,3 @@
-import sun.awt.X11GraphicsConfig;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -27,9 +25,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private void run() {
     double[] starX = new double[100];
     double[] starY = new double[100];
+    Random random = new Random();
     for (int i = 0; i < 100; i++) {
-      starX[i] = new Random().nextDouble();
-      starY[i] = new Random().nextDouble();
+      starX[i] = random.nextDouble();
+      starY[i] = random.nextDouble();
     }
     long prevTime = System.nanoTime();
     while (running) {
