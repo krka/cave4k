@@ -88,9 +88,9 @@ public class Main extends JPanel implements KeyListener, WindowListener {
 
       g.setColor(Color.LIGHT_GRAY);
       Polygon block = new Polygon(new int[]{-100, 100, 100, -100}, new int[]{-100, -100, -70, -70}, 4);
-      g.translate(x, y);
+      g.translate(-x, y);
       g.fillPolygon(block);
-      g.translate(-x, -y);
+      g.translate(x, -y);
 
       g.dispose();
       bufferStrategy.show();
