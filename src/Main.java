@@ -9,11 +9,14 @@ import java.util.Random;
 
 public class Main extends JPanel implements KeyListener, WindowListener {
   public static final int NUM_STARS = 200;
+  private static final double ACCEL = 0.000000001;
+  private static final double MAX_SPEED = 0.10;
   private boolean running = true;
   private final JFrame frame;
   double x;
   double y;
   double angle;
+  double speedX, speedY;
   private int rotateLeft;
   private int rotateRight;
   private int throttle;
@@ -40,9 +43,16 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
 
       angle += (rotateLeft + rotateRight) * delta * 0.00000001;
-      x += Math.sin(angle) * throttle * delta * 0.00000001;
-      y += Math.cos(angle) * throttle * delta * 0.00000001;
-
+      speedX += Math.sin(angle) * throttle * delta * ACCEL;
+      speedY += Math.cos(angle) * throttle * delta * ACCEL;
+      double foo = Math.sqrt(speedX * speedX + speedY * speedY);
+      System.out.println("" + speedX + " " + speedY + " " + foo);
+      if (foo > MAX_SPEED) {
+          speedX = speedX * MAX_SPEED / foo;
+          speedY = speedY * MAX_SPEED / foo;
+      }
+      x += speedX;
+      y += speedY;
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 800, 600);
 
