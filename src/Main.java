@@ -51,6 +51,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       angle += (rotateLeft + rotateRight) * delta * 0.00000001;
       speedX += Math.sin(angle) * throttle * delta * ACCEL;
       speedY += Math.cos(angle) * throttle * delta * ACCEL;
+      speedY += Math.cos(Math.PI) * delta * ACCEL / 10;
       double foo = Math.sqrt(speedX * speedX + speedY * speedY);
       if (foo > MAX_SPEED) {
           speedX = speedX * MAX_SPEED / foo;
