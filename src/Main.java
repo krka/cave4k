@@ -24,7 +24,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private int throttle;
 
   private Polygon[] walls = new Polygon[]{
-          new Polygon()
+          new Polygon(new int[]{-100, 100, 100, -100}, new int[]{-100, -100, -70, -70}, 4)
   };
 
   public static void main(String[] args) {
@@ -89,16 +89,19 @@ public class Main extends JPanel implements KeyListener, WindowListener {
 
 
       g.setColor(Color.LIGHT_GRAY);
-      Polygon block = new Polygon(new int[]{-100, 100, 100, -100}, new int[]{-100, -100, -70, -70}, 4);
       g.translate(-x, y);
-      g.fillPolygon(block);
+      for (Polygon p : walls) {
+          g.fillPolygon(p);
+      }
       g.translate(x, -y);
 
       Ellipse2D.Double body = new Ellipse2D.Double(-10 + x, -10 - y, 20, 20);
-      Area areaA = new Area(body);
-      areaA.intersect(new Area(block));
-      if (!areaA.isEmpty()) {
-        running = false;
+      for (Polygon p : walls) {
+        Area areaA = new Area(body);
+        areaA.intersect(new Area(p));
+        if (!areaA.isEmpty()) {
+            running = false;
+        }
       }
 
       g.dispose();
