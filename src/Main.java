@@ -40,6 +40,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       starY[i] = random.nextDouble();
     }
     long prevTime = System.nanoTime();
+    long startTime = prevTime;
     while (running) {
       long t = System.nanoTime();
       long delta = t - prevTime;
@@ -73,6 +74,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         y2 = (600 + y2) % 600;
         g.fillOval(x2, y2, 1 + level, 1 + level);
       }
+
+      long totalTime = t - startTime;
+      long ticks = totalTime / 100000000;
+      g.drawString("" + ticks, 40, 40);
 
       g.translate(400, 300);
 
