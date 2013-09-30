@@ -22,7 +22,6 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private int rotateLeft;
   private int rotateRight;
   private int throttle;
-  private boolean died;
 
   private final Polygon[] walls = {
           new Polygon(new int[]{57, 559, 559, 57}, new int[]{83, 83, 100, 100}, 4),
@@ -43,7 +42,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   }
 
   private void run() {
-    boolean dead = false;
+    boolean died = false;
     boolean win = false;
     double[] starX = new double[NUM_STARS];
     double[] starY = new double[NUM_STARS];
@@ -54,6 +53,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
     }
     long prevTime = System.nanoTime();
     long startTime = prevTime;
+
+    long totalTime = 0;
+    long ticks = 0;
+
     while (running) {
       long t = System.nanoTime();
       long delta = t - prevTime;
@@ -62,17 +65,26 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       BufferStrategy bufferStrategy = frame.getBufferStrategy();
       Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
 
-      angle += (rotateLeft + rotateRight) * delta * 0.00000001;
-      speedX += Math.sin(angle) * throttle * delta * ACCEL;
-      speedY += Math.cos(angle) * throttle * delta * ACCEL;
-      speedY += Math.cos(Math.PI) * delta * ACCEL / 10;
-      double foo = Math.sqrt(speedX * speedX + speedY * speedY);
-      if (foo > MAX_SPEED) {
-          speedX = speedX * MAX_SPEED / foo;
-          speedY = speedY * MAX_SPEED / foo;
+      if (win) {
+        angle += 3 * delta * 0.00000001;
+      } else if (!died) {
+        angle += (rotateLeft + rotateRight) * delta * 0.00000001;
       }
-      x += speedX;
-      y += speedY;
+      if (!win && !died) {
+        speedX += Math.sin(angle) * throttle * delta * ACCEL;
+        speedY += Math.cos(angle) * throttle * delta * ACCEL;
+        speedY += Math.cos(Math.PI) * delta * ACCEL / 10;
+        double foo = Math.sqrt(speedX * speedX + speedY * speedY);
+        if (foo > MAX_SPEED) {
+            speedX = speedX * MAX_SPEED / foo;
+            speedY = speedY * MAX_SPEED / foo;
+        }
+        x += speedX;
+        y += speedY;
+      } else {
+        speedX = 0;
+        speedY = 0;
+      }
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, 800, 600);
 
@@ -88,29 +100,12 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         g.fillOval(x2, y2, 1 + level, 1 + level);
       }
 
-      long totalTime = t - startTime;
-      long ticks = totalTime / 100000000;
-      g.drawString("" + ticks, 40, 40);
-
       g.translate(400, 300);
-
-      g.setPaint(new RadialGradientPaint(0, -10, 30, new float[]{0.2f, 0.7f, 0.8f}, new Color[]{Color.BLUE, Color.CYAN, Color.WHITE}));
-      g.rotate(angle);
-      Polygon ship = new Polygon(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
-      g.fillPolygon(ship);
-      if (throttle > 0) {
-        int color = (int) ((System.currentTimeMillis() / 50) % 3);
-        Color[] throttleColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW};
-        g.setColor(throttleColors[color]);
-        g.drawPolyline(new int[]{-5, 0, 5}, new int[]{15, 25, 15}, 3);
-      }
-      g.rotate(-angle);
-
 
       g.setColor(Color.LIGHT_GRAY);
       g.translate(-x, y);
       for (Polygon p : walls) {
-          g.fillPolygon(p);
+        g.fillPolygon(p);
       }
       g.setColor(Color.YELLOW);
       for (Polygon p : goals) {
@@ -118,13 +113,40 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       }
       g.translate(x, -y);
 
+      g.setPaint(new RadialGradientPaint(0, -10, 30, new float[]{0.2f, 0.7f, 0.8f}, new Color[]{Color.BLUE, Color.CYAN, Color.WHITE}));
+      if (!died) {
+        g.rotate(angle);
+        Polygon ship = new Polygon(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
+        g.fillPolygon(ship);
+        if (!win && throttle > 0) {
+          int color = (int) ((System.currentTimeMillis() / 50) % 3);
+          Color[] throttleColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW};
+          g.setColor(throttleColors[color]);
+          g.drawPolyline(new int[]{-5, 0, 5}, new int[]{15, 25, 15}, 3);
+        }
+        g.rotate(-angle);
+      } else {
+        g.setColor(Color.RED);
+        for (int i = 0; i < 3; i++) {
+          int offset = (int) ((System.currentTimeMillis() / 30) % 5);
+          g.drawOval(-i*10 - offset, -i*10 - offset, 2*i*10 + offset, 2*i*10 + offset);
+        }
+      }
+
+      g.setColor(Color.WHITE);
+      g.translate(-400, -300);
+
+      if (!died && !win) {
+        totalTime = t - startTime;
+        ticks = totalTime / 100000000;
+      }
+      g.drawString(String.format("%.1f", ticks / 10d), 40, 40);
+
       Ellipse2D.Double body = new Ellipse2D.Double(-10 + x, -10 - y, 20, 20);
       for (Polygon p : walls) {
         Area areaA = new Area(body);
         areaA.intersect(new Area(p));
         if (!areaA.isEmpty()) {
-            dead = true;
-            running = false;
             died = true;
         }
       }
@@ -133,7 +155,6 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         areaA.intersect(new Area(p));
         if (!areaA.isEmpty()) {
           win = true;
-          running = false;
         }
       }
 
@@ -144,10 +165,6 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         Thread.sleep(10);
       } catch (InterruptedException e) {
       }
-    }
-
-    if (died) {
-        System.out.println("You died!");
     }
 
     frame.dispose();
