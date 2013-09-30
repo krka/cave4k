@@ -46,7 +46,6 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       speedX += Math.sin(angle) * throttle * delta * ACCEL;
       speedY += Math.cos(angle) * throttle * delta * ACCEL;
       double foo = Math.sqrt(speedX * speedX + speedY * speedY);
-      System.out.println("" + speedX + " " + speedY + " " + foo);
       if (foo > MAX_SPEED) {
           speedX = speedX * MAX_SPEED / foo;
           speedY = speedY * MAX_SPEED / foo;
@@ -68,10 +67,13 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         g.fillOval(x2, y2, 1 + level, 1 + level);
       }
 
-      g.setColor(Color.BLUE);
       g.translate(400, 300);
+
+      g.setColor(Color.BLUE);
       g.rotate(angle);
-      g.drawPolyline(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
+      Polygon ship = new Polygon(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
+      g.drawPolygon(ship);
+
       if (throttle > 0) {
         int color = (int) ((System.currentTimeMillis() / 50) % 3);
         Color[] throttleColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW};
@@ -79,7 +81,11 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         g.drawPolyline(new int[]{-5, 0, 5}, new int[]{15, 25, 15}, 3);
       }
       g.rotate(-angle);
-      g.translate(-400, -300);
+
+      Polygon block = new Polygon(new int[]{-100, 100, 100, -100}, new int[]{-100, -100, -70, -70}, 4);
+      g.translate(x, y);
+      g.drawPolygon(block);
+      g.translate(-x, -y);
 
       g.dispose();
       bufferStrategy.show();
