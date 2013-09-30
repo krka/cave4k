@@ -115,5 +115,18 @@
        x="554.28571"
        y="840.93359"
        inkscape:label="goal" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="M 97.142853,615.21933 211.42857,558.07647 122.85714,675.21933 277.14285,600.93362 200,692.36219 100,683.79076 z"
+       id="path3034"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3036"
+       width="188.57143"
+       height="25.714285"
+       x="362.85715"
+       y="398.07648"
+       inkscape:label="blink" />
   </g>
 </svg>

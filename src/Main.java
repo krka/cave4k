@@ -32,6 +32,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
           new Polygon(new int[]{54, 76, 76, 54}, new int[]{346, 346, 954, 954}, 4),
           new Polygon(new int[]{242, 556, 556, 242}, new int[]{775, 775, 800, 800}, 4),
           new Polygon(new int[]{42, 573, 573, 42}, new int[]{952, 952, 960, 960}, 4),
+          new Polygon(new int[]{97,211,122,277,200,100}, new int[]{615,558,675,600,692,683}, 6),
+  };
+  private final Polygon[] blinks = {
+          new Polygon(new int[]{362, 550, 550, 362}, new int[]{398, 398, 423, 423}, 4),
   };
   private final Polygon[] goals = {
           new Polygon(new int[]{554, 716, 716, 554}, new int[]{840, 840, 948, 948}, 4),
@@ -100,6 +104,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         g.fillOval(x2, y2, 1 + level, 1 + level);
       }
 
+      boolean blinkVisible = (System.currentTimeMillis() / 1500) % 2 == 0;
       g.translate(400, 300);
 
       g.setColor(Color.LIGHT_GRAY);
@@ -109,6 +114,14 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       }
       g.setColor(Color.YELLOW);
       for (Polygon p : goals) {
+        g.fillPolygon(p);
+      }
+      if (blinkVisible) {
+        g.setColor(Color.RED);
+      } else {
+        g.setColor(Color.DARK_GRAY);
+      }
+      for (Polygon p : blinks) {
         g.fillPolygon(p);
       }
       g.translate(x, -y);
@@ -150,6 +163,15 @@ public class Main extends JPanel implements KeyListener, WindowListener {
             died = true;
         }
       }
+      if (blinkVisible) {
+        for (Polygon p : blinks) {
+          Area areaA = new Area(body);
+          areaA.intersect(new Area(p));
+          if (!areaA.isEmpty()) {
+            died = true;
+          }
+        }
+      }
       for (Polygon p : goals) {
         Area areaA = new Area(body);
         areaA.intersect(new Area(p));
@@ -171,7 +193,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   }
 
   public Main() throws HeadlessException {
-    frame = new JFrame("foo");
+    frame = new JFrame("Cave4K");
     frame.addWindowListener(this);
     frame.setSize(800, 600);
     frame.setVisible(true);
