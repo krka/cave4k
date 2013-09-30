@@ -21,6 +21,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private int rotateRight;
   private int throttle;
 
+  private Polygon[] walls = new Polygon[]{
+          new Polygon()
+  };
+
   public static void main(String[] args) {
     new Main().run();
   }
@@ -69,11 +73,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
 
       g.translate(400, 300);
 
-      g.setColor(Color.BLUE);
+      g.setPaint(new RadialGradientPaint(0, -10, 30, new float[]{0.2f, 0.7f, 0.8f}, new Color[]{Color.BLUE, Color.CYAN, Color.WHITE}));
       g.rotate(angle);
       Polygon ship = new Polygon(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
-      g.drawPolygon(ship);
-
+      g.fillPolygon(ship);
       if (throttle > 0) {
         int color = (int) ((System.currentTimeMillis() / 50) % 3);
         Color[] throttleColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW};
@@ -82,9 +85,11 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       }
       g.rotate(-angle);
 
+
+      g.setColor(Color.LIGHT_GRAY);
       Polygon block = new Polygon(new int[]{-100, 100, 100, -100}, new int[]{-100, -100, -70, -70}, 4);
       g.translate(x, y);
-      g.drawPolygon(block);
+      g.fillPolygon(block);
       g.translate(-x, -y);
 
       g.dispose();
