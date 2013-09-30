@@ -24,7 +24,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private int throttle;
   private boolean died;
 
-  private Polygon[] walls = new Polygon[]{
+  private final Polygon[] walls = {
           new Polygon(new int[]{57, 559, 559, 57}, new int[]{83, 83, 100, 100}, 4),
           new Polygon(new int[]{57, 77, 77, 57}, new int[]{112, 112, 340, 340}, 4),
           new Polygon(new int[]{85, 433, 433, 85}, new int[]{309, 309, 331, 331}, 4),
@@ -34,12 +34,17 @@ public class Main extends JPanel implements KeyListener, WindowListener {
           new Polygon(new int[]{242, 556, 556, 242}, new int[]{775, 775, 800, 800}, 4),
           new Polygon(new int[]{42, 573, 573, 42}, new int[]{952, 952, 960, 960}, 4),
   };
+  private final Polygon[] goals = {
+          new Polygon(new int[]{554, 716, 716, 554}, new int[]{840, 840, 948, 948}, 4),
+  };
 
   public static void main(String[] args) {
     new Main().run();
   }
 
   private void run() {
+    boolean dead = false;
+    boolean win = false;
     double[] starX = new double[NUM_STARS];
     double[] starY = new double[NUM_STARS];
     Random random = new Random();
@@ -107,6 +112,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       for (Polygon p : walls) {
           g.fillPolygon(p);
       }
+      g.setColor(Color.YELLOW);
+      for (Polygon p : goals) {
+        g.fillPolygon(p);
+      }
       g.translate(x, -y);
 
       Ellipse2D.Double body = new Ellipse2D.Double(-10 + x, -10 - y, 20, 20);
@@ -114,8 +123,17 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         Area areaA = new Area(body);
         areaA.intersect(new Area(p));
         if (!areaA.isEmpty()) {
+            dead = true;
             running = false;
             died = true;
+        }
+      }
+      for (Polygon p : goals) {
+        Area areaA = new Area(body);
+        areaA.intersect(new Area(p));
+        if (!areaA.isEmpty()) {
+          win = true;
+          running = false;
         }
       }
 

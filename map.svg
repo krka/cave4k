@@ -14,7 +14,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.3.1 r9886"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="map.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -107,5 +107,13 @@
        height="8.5714283"
        x="42.857143"
        y="952.36218" />
+    <rect
+       style="fill:#0000ff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="rect3020"
+       width="162.85715"
+       height="108.57143"
+       x="554.28571"
+       y="840.93359"
+       inkscape:label="goal" />
   </g>
 </svg>
