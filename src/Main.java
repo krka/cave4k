@@ -63,9 +63,16 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       g.translate(400, 300);
       g.rotate(angle);
       g.drawPolyline(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
+      if (throttle > 0) {
+        int color = (int) ((System.currentTimeMillis() / 50) % 3);
+        Color[] throttleColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW};
+        g.setColor(throttleColors[color]);
+        g.drawPolyline(new int[]{-5, 0, 5}, new int[]{15, 25, 15}, 3);
+      }
       g.rotate(-angle);
       g.translate(-400, -300);
-      //g.fillRect((int) (100 + (x % 100)), (int) (100 + (x % 100)), 200, 200);
+
+
       g.dispose();
       bufferStrategy.show();
       Toolkit.getDefaultToolkit().sync();
