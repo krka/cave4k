@@ -23,10 +23,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   }
 
   private void run() {
-    double[] starX = new double[100];
-    double[] starY = new double[100];
+    double[] starX = new double[NUM_STARS];
+    double[] starY = new double[NUM_STARS];
     Random random = new Random();
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < NUM_STARS; i++) {
       starX[i] = random.nextDouble();
       starY[i] = random.nextDouble();
     }
