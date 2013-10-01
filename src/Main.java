@@ -16,10 +16,6 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private static final double MAX_SPEED = 0.0000004;
   private boolean running = true;
   private final JFrame frame;
-  double x = 600;
-  double y = 2900;
-  double angle;
-  double speedX, speedY;
   private int rotateLeft;
   private int rotateRight;
   private int throttle;
@@ -83,6 +79,11 @@ public class Main extends JPanel implements KeyListener, WindowListener {
     bulletsX = new Double[cannons.length];
     bulletsY = new Double[cannons.length];
 
+    double x = 600;
+    double y = 2900;
+    double angle = 0;
+    double speedX = 0, speedY = 0;
+
     boolean died = false;
     boolean win = false;
     double[] starX = new double[NUM_STARS];
@@ -95,7 +96,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
     long prevTime = System.nanoTime();
     long startTime = prevTime;
 
-    long totalTime = 0;
+    long totalTime;
     long ticks = 0;
 
     while (running) {
@@ -266,7 +267,6 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   public Main() throws HeadlessException {
     frame = new JFrame("Cave4K");
     frame.addWindowListener(this);
-    frame.setSize(800, 600);
     frame.setVisible(true);
     frame.createBufferStrategy(2);
     frame.add(this);
