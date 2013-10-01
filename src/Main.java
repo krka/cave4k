@@ -16,7 +16,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private boolean running = true;
   private final JFrame frame;
   double x = 600;
-  double y = 2500;
+  double y = 2900;
   double angle;
   double speedX, speedY;
   private int rotateLeft;
