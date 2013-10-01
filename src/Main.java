@@ -53,7 +53,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
           new Polygon(new int[]{1960,1840,1920,2040}, new int[]{-2667,-2547,-2507,-2667}, 4),
           new Polygon(new int[]{2160,2320,2360,2200}, new int[]{-2467,-2347,-2427,-2547}, 4),
           new Polygon(new int[]{2200,2200,2440,2440,2600,2600}, new int[]{-1867,-1867,-2267,-2747,-2747,-1867}, 6),
-          new Polygon(new int[]{1520,3360,5200,6720}, new int[]{-2627,-2227,-2227,-2387}, 4),
+          new Polygon(new int[]{1520,1840,1840,1520}, new int[]{-2627,-2867,-3267,-3427}, 4),
           new Polygon(new int[]{2440,2160,2160,2600,2600}, new int[]{-2747,-2907,-3267,-3427,-2747}, 5),
   };
   private final Polygon[] blinks = {

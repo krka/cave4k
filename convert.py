@@ -38,20 +38,32 @@ for item in xmldoc.getElementsByTagName('path'):
    d = item.attributes['d'].value
    xs = []
    ys = []
-   cx = 0
-   cy = 0
+   ox = 0
+   oy = 0
    t = item.attributes.get('transform')
    if t:
       m = pattern.match(t.value)
       if m:
-           cx = int(float(m.group(1)))
-           cy = int(float(m.group(2)))
+           ox = int(float(m.group(1)))
+           oy = int(float(m.group(2)))
 
+   cx = ox
+   cy = oy
+   rel = None
    for pair in d.split(' '):
+      if pair == 'm':
+          rel = True
+      if pair == 'M':
+          rel = False
       p = pair.split(',')
       if isinstance(p, list) and len(p) == 2:
-         cx += int(float(p[0]))
-         cy += int(float(p[1]))
+         if rel is None: raise Exception(d)
+         if rel:
+            cx += int(float(p[0]))
+            cy += int(float(p[1]))
+         else:
+            cx = ox + int(float(p[0]))
+            cy = oy + int(float(p[1]))
          xs.append(str(cx))
          ys.append(str(cy))
    t = get_type(item)
