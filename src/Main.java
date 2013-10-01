@@ -69,6 +69,11 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   }
 
   private void run() {
+    GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    device.setFullScreenWindow(frame);
+    int width = frame.getWidth();
+    int height = frame.getHeight();
+
     boolean died = false;
     boolean win = false;
     double[] starX = new double[NUM_STARS];
@@ -110,22 +115,22 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       x += speedX;
       y += speedY;
       g.setColor(Color.BLACK);
-      g.fillRect(0, 0, 800, 600);
+      g.fillRect(0, 0, width, height);
 
       for (int i = 0; i < NUM_STARS; i++) {
         int level = (i / (NUM_STARS / 3));
         int scale = 10 + 2*level;
         int color = 60 + level * 60;
         g.setColor(new Color(color, color, color));
-        int x2 = (int) (-x * scale * 0.1 + 800 * scale * starX[i]) % 800;
-        int y2 = (int) (y * scale * 0.1 + 600 * scale * starY[i]) % 600;
-        x2 = (800 + x2) % 800;
-        y2 = (600 + y2) % 600;
+        int x2 = (int) (-x * scale * 0.1 + width * scale * starX[i]) % width;
+        int y2 = (int) (y * scale * 0.1 + height * scale * starY[i]) % height;
+        x2 = (width + x2) % width;
+        y2 = (height + y2) % height;
         g.fillOval(x2, y2, 1 + level, 1 + level);
       }
 
       boolean blinkVisible = (System.currentTimeMillis() / 1500) % 2 == 0;
-      g.translate(400, 300);
+      g.translate(width/2, height/2);
 
       g.setColor(Color.LIGHT_GRAY);
       g.translate(-x, y);
@@ -167,7 +172,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       }
 
       g.setColor(Color.WHITE);
-      g.translate(-400, -300);
+      g.translate(-width/2, -height/2);
 
       if (!died && !win) {
         totalTime = t - startTime;
