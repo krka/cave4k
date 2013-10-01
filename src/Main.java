@@ -2,15 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
-public class Main extends JPanel implements KeyListener, WindowListener {
+public class Main extends JPanel implements KeyListener {
   public static final int NUM_STARS = 200;
   private static final double ACCEL = 0.000000000000001;
   private static final double MAX_SPEED = 0.0000004;
@@ -60,11 +57,9 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private final Polygon[] goals = {
           new Polygon(new int[]{1520,2600,2160,1840}, new int[]{-3427,-3427,-3267,-3267}, 4),
   };
-  private final Polygon[] cannons = {
-          new Polygon(new int[]{-10,5,5,-10}, new int[]{-2,-2,23,23}, 4),
-  };
-  private final double[] cannonX = new double[]{570};
-  private final double[] cannonY = new double[]{-2000};
+  private final Polygon cannon = new Polygon(new int[]{-10,5,5,-10}, new int[]{-2,-2,23,23}, 4);
+  private final double[] cannonX = new double[]{121, 1845, 1730};
+  private final double[] cannonY = new double[]{-2000, -3200, -2780};
 
   private Double[] bulletsX;
   private Double[] bulletsY;
@@ -78,8 +73,8 @@ public class Main extends JPanel implements KeyListener, WindowListener {
     device.setFullScreenWindow(frame);
     int width = frame.getWidth();
     int height = frame.getHeight();
-    bulletsX = new Double[cannons.length];
-    bulletsY = new Double[cannons.length];
+    bulletsX = new Double[cannonX.length];
+    bulletsY = new Double[cannonX.length];
 
     double x = 600;
     double y = 2900;
@@ -101,6 +96,8 @@ public class Main extends JPanel implements KeyListener, WindowListener {
     long totalTime;
     long ticks = 0;
 
+    Color black = new Color(0, 0, 0);
+
     while (running) {
       long t = System.nanoTime();
       long delta = t - prevTime;
@@ -117,7 +114,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       if (!win && !died) {
         speedX += Math.sin(angle) * throttle * delta * ACCEL;
         speedY += Math.cos(angle) * throttle * delta * ACCEL;
-        speedY += Math.cos(Math.PI) * delta * ACCEL / 10;
+        speedY -= delta * ACCEL / 10;
         double foo = Math.sqrt(speedX * speedX + speedY * speedY);
         if (foo > MAX_SPEED) {
             speedX = speedX * MAX_SPEED / foo;
@@ -127,15 +124,15 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       x += delta * speedX;
       y += delta * speedY;
       
-      for (int i = 0; i < cannons.length; i++) {
+      for (int i = 0; i < cannonX.length; i++) {
           if (bulletsX[i] == null) {
               bulletsX[i] = cannonX[i];
               bulletsY[i] = cannonY[i];
           }
-          bulletsX[i] += delta * 0.00000008;
+          bulletsX[i] += delta * 0.00000016;
       }
 
-      g.setColor(Color.BLACK);
+      g.setColor(black);
       g.fillRect(0, 0, width, height);
 
       for (int i = 0; i < NUM_STARS; i++) {
@@ -153,62 +150,69 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       boolean blinkVisible = (System.currentTimeMillis() / 1500) % 2 == 0;
       g.translate(width / 2, height / 2);
 
-      g.setColor(Color.LIGHT_GRAY);
+      g.setColor(new Color(240, 240, 240));
       g.translate(-x, y);
       for (Polygon p : walls) {
         g.fillPolygon(p);
       }
-      g.setColor(Color.YELLOW);
+      Color yellow = new Color(240, 240, 0);
+      g.setColor(yellow);
       for (Polygon p : goals) {
         g.fillPolygon(p);
       }
+      Color red = new Color(240, 0, 0);
       if (blinkVisible) {
-        g.setColor(Color.RED);
+        g.setColor(red);
       } else {
-        g.setColor(Color.DARK_GRAY);
+        Color darkgray = new Color(50, 50, 50);
+        g.setColor(darkgray);
       }
       for (Polygon p : blinks) {
         g.fillPolygon(p);
       }
-      g.setColor(Color.ORANGE);
+      Color orange = new Color(240, 200, 50);
+      g.setColor(orange);
       for (int i = 0; i < cannonX.length; i++) {
-        for (Polygon p : cannons) {
-          g.fillPolygon(p);
-        }
+        g.translate(cannonX[i], cannonY[i]);
+        g.fillPolygon(cannon);
+        g.translate(-cannonX[i], -cannonY[i]);
       }
       for (int i = 0; i < bulletsX.length; i++) {
           g.fillOval(bulletsX[i].intValue() - 3, bulletsY[i].intValue() - 3, 6, 6);
       }
       g.translate(x, -y);
 
-      g.setPaint(new RadialGradientPaint(0, -10, 30, new float[]{0.2f, 0.7f, 0.8f}, new Color[]{Color.BLUE, Color.CYAN, Color.WHITE}));
+      Color blue = new Color(0, 0, 250);
+      Color cyan = new Color(0, 240, 240);
+      Color white = new Color(255, 255, 255);
+      g.setPaint(new RadialGradientPaint(0, -10, 30, new float[]{0.2f, 0.7f, 0.8f}, new Color[]{blue, cyan, white}));
       if (!died) {
         g.rotate(angle);
         Polygon ship = new Polygon(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
         g.fillPolygon(ship);
         if (!win && throttle > 0) {
           int color = (int) ((System.currentTimeMillis() / 50) % 3);
-          Color[] throttleColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW};
+          Color[] throttleColors = new Color[]{red, orange, yellow};
           g.setColor(throttleColors[color]);
           g.drawPolyline(new int[]{-5, 0, 5}, new int[]{15, 25, 15}, 3);
         }
         g.rotate(-angle);
       } else {
-        g.setColor(Color.RED);
+        g.setColor(red);
         for (int i = 0; i < 3; i++) {
           int offset = (int) ((System.currentTimeMillis() / 30) % 5);
           g.drawOval(-i*10 - offset, -i*10 - offset, 2*i*10 + offset, 2*i*10 + offset);
         }
       }
 
-      g.setColor(Color.WHITE);
+      g.setColor(red);
       g.translate(-width/2, -height/2);
 
       if (!died && !win) {
         totalTime = t - startTime;
         ticks = totalTime / 100000000;
       }
-      g.drawString(String.format("%.1f", ticks / 10d), 40, 40);
+      g.drawString("" + ticks, 40, 40);
 
       Ellipse2D.Double body = new Ellipse2D.Double(-10 + x, -10 - y, 20, 20);
       for (Polygon p : walls) {
@@ -269,7 +273,6 @@ public class Main extends JPanel implements KeyListener, WindowListener {
 
   public Main() throws HeadlessException {
     frame = new JFrame("Cave4K");
-    frame.addWindowListener(this);
     frame.setVisible(true);
     frame.createBufferStrategy(2);
     frame.add(this);
@@ -282,59 +285,32 @@ public class Main extends JPanel implements KeyListener, WindowListener {
 
   @Override
   public void keyPressed(KeyEvent keyEvent) {
-    if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+    int keyCode = keyEvent.getKeyCode();
+    if (keyCode == 37) {
       rotateLeft = -1;
     }
-    if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+    if (keyCode == 39) {
       rotateRight = 1;
     }
-    if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
+    if (keyCode == 38) {
       throttle = 1;
     }
-    if (keyEvent.getKeyCode() == KeyEvent.VK_ESCAPE) {
+    if (keyCode == 27) {
       running = false;
     }
   }
 
   @Override
   public void keyReleased(KeyEvent keyEvent) {
-    if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+    int keyCode = keyEvent.getKeyCode();
+    if (keyCode == 37) {
       rotateLeft = 0;
     }
-    if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+    if (keyCode == 39) {
       rotateRight = 0;
     }
-    if (keyEvent.getKeyCode() == KeyEvent.VK_UP) {
+    if (keyCode == 38) {
       throttle = 0;
     }
-  }
-
-  @Override
-  public void windowOpened(WindowEvent windowEvent) {
-  }
-
-  @Override
-  public void windowClosing(WindowEvent windowEvent) {
-    running = false;
-  }
-
-  @Override
-  public void windowClosed(WindowEvent windowEvent) {
-  }
-
-  @Override
-  public void windowIconified(WindowEvent windowEvent) {
-  }
-
-  @Override
-  public void windowDeiconified(WindowEvent windowEvent) {
-  }
-
-  @Override
-  public void windowActivated(WindowEvent windowEvent) {
-  }
-
-  @Override
-  public void windowDeactivated(WindowEvent windowEvent) {
   }
 }
