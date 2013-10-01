@@ -212,7 +212,7 @@ public class Main extends JPanel implements KeyListener {
         totalTime = t - startTime;
         ticks = totalTime / 100000000;
       }
-      g.drawString("" + ticks, 40, 40);
+      g.drawString("" + ticks, 40, 60);
 
       Ellipse2D.Double body = new Ellipse2D.Double(-10 + x, -10 - y, 20, 20);
       for (Polygon p : walls) {
