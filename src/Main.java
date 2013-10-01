@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class Main extends JPanel implements KeyListener, WindowListener {
   public static final int NUM_STARS = 200;
-  private static final double ACCEL = 0.00000001;
-  private static final double MAX_SPEED = 5.0;
+  private static final double ACCEL = 0.0000000000000§01;
+  private static final double MAX_SPEED = 0.0000004;
   private boolean running = true;
   private final JFrame frame;
   double x = 600;
@@ -112,8 +112,8 @@ public class Main extends JPanel implements KeyListener, WindowListener {
             speedY = speedY * MAX_SPEED / foo;
         }
       }
-      x += speedX;
-      y += speedY;
+      x += delta * speedX;
+      y += delta * speedY;
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, width, height);
 
