@@ -98,7 +98,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
 
       if (win) {
-        angle += 3 * delta * 0.00000001;
+        angle += 1 * delta * 0.00000001;
       } else if (!died) {
         angle += (rotateLeft + rotateRight) * delta * 0.00000001;
       }
