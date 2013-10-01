@@ -5,6 +5,7 @@ itemlist = xmldoc.getElementsByTagName('rect')
 walls = []
 blinks = []
 goals = []
+cannons = []
 
 def get_type(item):
    label = item.attributes.get('inkscape:label')
@@ -12,6 +13,8 @@ def get_type(item):
       return goals
    elif label and label.value == 'blink':
       return blinks
+   elif label and label.value == 'cannon':
+       return cannons
    else:
       return walls
 
@@ -82,5 +85,10 @@ print "};"
 print "private final Polygon[] goals = {"
 for goal in goals:
     print goal
+print "};"
+
+print "private final Polygon[] cannons = {"
+for cannon in cannons:
+    print cannon
 print "};"
 

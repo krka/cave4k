@@ -6,6 +6,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferStrategy;
 import java.util.Random;
 
@@ -63,7 +64,13 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private final Polygon[] goals = {
           new Polygon(new int[]{1520,2600,2160,1840}, new int[]{-3427,-3427,-3267,-3267}, 4),
   };
+  private final Polygon[] cannons = {
+          new Polygon(new int[]{560,575,575,560}, new int[]{-2002,-2002,-1977,-1977}, 4),
+  };
 
+  private Double[] bulletsX;
+  private Double[] bulletsY;
+  
   public static void main(String[] args) {
     new Main().run();
   }
@@ -73,6 +80,8 @@ public class Main extends JPanel implements KeyListener, WindowListener {
     device.setFullScreenWindow(frame);
     int width = frame.getWidth();
     int height = frame.getHeight();
+    bulletsX = new Double[cannons.length];
+    bulletsY = new Double[cannons.length];
 
     boolean died = false;
     boolean win = false;
@@ -114,6 +123,16 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       }
       x += delta * speedX;
       y += delta * speedY;
+      
+      for (int i = 0; i < cannons.length; i++) {
+          if (bulletsX[i] == null) {
+              Rectangle2D bbox = cannons[i].getBounds2D();
+              bulletsX[i] = bbox.getCenterX();
+              bulletsY[i] = bbox.getCenterY();
+          }
+          bulletsX[i] += delta * 0.00000008;
+      }
+
       g.setColor(Color.BLACK);
       g.fillRect(0, 0, width, height);
 
@@ -148,6 +167,13 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       }
       for (Polygon p : blinks) {
         g.fillPolygon(p);
+      }
+      g.setColor(Color.ORANGE);
+      for (Polygon p : cannons) {
+          g.fillPolygon(p);
+      }
+      for (int i = 0; i < bulletsX.length; i++) {
+          g.fillOval(bulletsX[i].intValue() - 3, bulletsY[i].intValue() - 3, 6, 6);
       }
       g.translate(x, -y);
 
@@ -203,6 +229,26 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         if (!areaA.isEmpty()) {
           win = true;
         }
+      }
+
+      for (int i = 0; i < bulletsX.length; i ++) {
+          Area areaA = new Area(new Ellipse2D.Double(bulletsX[i] - 3, bulletsY[i] - 3, 6, 6));
+          areaA.intersect(new Area(body));
+          if (!areaA.isEmpty()) {
+            died = true;
+            break;
+          }              
+      }
+      for (int i = 0; i < bulletsX.length; i++) {
+          for (Polygon p : walls) {
+              Area areaA = new Area(new Ellipse2D.Double(bulletsX[i] - 3, bulletsY[i] - 3, 6, 6));
+              areaA.intersect(new Area(p));
+              if (!areaA.isEmpty()) {
+                bulletsX[i] = null;
+                bulletsY[i] = null;
+                break;
+              }              
+          }
       }
 
       g.dispose();
