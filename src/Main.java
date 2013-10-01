@@ -61,8 +61,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
           new Polygon(new int[]{1520,2600,2160,1840}, new int[]{-3427,-3427,-3267,-3267}, 4),
   };
   private final Polygon[] cannons = {
-          new Polygon(new int[]{560,575,575,560}, new int[]{-2002,-2002,-1977,-1977}, 4),
+          new Polygon(new int[]{-10,5,5,-10}, new int[]{-2,-2,23,23}, 4),
   };
+  private final double[] cannonX = new double[]{570};
+  private final double[] cannonY = new double[]{-2000};
 
   private Double[] bulletsX;
   private Double[] bulletsY;
@@ -127,9 +129,8 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       
       for (int i = 0; i < cannons.length; i++) {
           if (bulletsX[i] == null) {
-              Rectangle2D bbox = cannons[i].getBounds2D();
-              bulletsX[i] = bbox.getCenterX();
-              bulletsY[i] = bbox.getCenterY();
+              bulletsX[i] = cannonX[i];
+              bulletsY[i] = cannonY[i];
           }
           bulletsX[i] += delta * 0.00000008;
       }
@@ -150,7 +151,7 @@ public class Main extends JPanel implements KeyListener, WindowListener {
       }
 
       boolean blinkVisible = (System.currentTimeMillis() / 1500) % 2 == 0;
-      g.translate(width/2, height/2);
+      g.translate(width / 2, height / 2);
 
       g.setColor(Color.LIGHT_GRAY);
       g.translate(-x, y);
@@ -170,8 +171,10 @@ public class Main extends JPanel implements KeyListener, WindowListener {
         g.fillPolygon(p);
       }
       g.setColor(Color.ORANGE);
-      for (Polygon p : cannons) {
+      for (int i = 0; i < cannonX.length; i++) {
+        for (Polygon p : cannons) {
           g.fillPolygon(p);
+        }
       }
       for (int i = 0; i < bulletsX.length; i++) {
           g.fillOval(bulletsX[i].intValue() - 3, bulletsY[i].intValue() - 3, 6, 6);
