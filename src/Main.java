@@ -12,11 +12,11 @@ import java.util.Random;
 public class Main extends JPanel implements KeyListener, WindowListener {
   public static final int NUM_STARS = 200;
   private static final double ACCEL = 0.00000001;
-  private static final double MAX_SPEED = 3.0;
+  private static final double MAX_SPEED = 5.0;
   private boolean running = true;
   private final JFrame frame;
-  double x = 130;
-  double y = -150;
+  double x = 600;
+  double y = 2500;
   double angle;
   double speedX, speedY;
   private int rotateLeft;
@@ -24,21 +24,44 @@ public class Main extends JPanel implements KeyListener, WindowListener {
   private int throttle;
 
   private final Polygon[] walls = {
-          new Polygon(new int[]{57, 559, 559, 57}, new int[]{83, 83, 100, 100}, 4),
-          new Polygon(new int[]{57, 77, 77, 57}, new int[]{112, 112, 340, 340}, 4),
-          new Polygon(new int[]{85, 433, 433, 85}, new int[]{309, 309, 331, 331}, 4),
-          new Polygon(new int[]{557, 582, 582, 557}, new int[]{89, 89, 834, 834}, 4),
-          new Polygon(new int[]{65, 427, 427, 65}, new int[]{498, 498, 515, 515}, 4),
-          new Polygon(new int[]{54, 76, 76, 54}, new int[]{346, 346, 954, 954}, 4),
-          new Polygon(new int[]{242, 556, 556, 242}, new int[]{775, 775, 800, 800}, 4),
-          new Polygon(new int[]{42, 573, 573, 42}, new int[]{952, 952, 960, 960}, 4),
-          new Polygon(new int[]{97,211,122,277,200,100}, new int[]{615,558,675,600,692,683}, 6),
+          new Polygon(new int[]{-200,360,360,120,-200}, new int[]{-3427,-3427,-3147,-2747,-2747}, 5),
+          new Polygon(new int[]{840,360,360,840}, new int[]{-3427,-3427,-3147,-3147}, 4),
+          new Polygon(new int[]{840,1280,1280,1120,1000,1000,840}, new int[]{-3427,-3427,-2627,-2627,-2747,-2947,-3147}, 7),
+          new Polygon(new int[]{120,120,-200,-200}, new int[]{-2747,-2107,-2107,-2747}, 4),
+          new Polygon(new int[]{1120,1280,1280,800,800,960,960,1120}, new int[]{-2347,-2347,-1747,-1747,-1987,-2147,-2267,-2347}, 8),
+          new Polygon(new int[]{360,480,560,560,280,280}, new int[]{-2267,-2267,-2067,-1747,-1747,-2107}, 6),
+          new Polygon(new int[]{120,120,-200,-200}, new int[]{-2107,-1667,-1667,-2107}, 4),
+          new Polygon(new int[]{120,680,680,520,120}, new int[]{-1507,-1267,-1067,-1067,-1267}, 5),
+          new Polygon(new int[]{680,1160,1160,680}, new int[]{-1267,-1267,-1067,-1067}, 4),
+          new Polygon(new int[]{960,1200,1320,1160}, new int[]{-1587,-1427,-1507,-1587}, 4),
+          new Polygon(new int[]{1280,1520,1520,1280}, new int[]{-3427,-3427,-2627,-2627}, 4),
+          new Polygon(new int[]{1280,1280,1520,1520}, new int[]{-2627,-2347,-2347,-2627}, 4),
+          new Polygon(new int[]{1520,1520,1280,1280}, new int[]{-2347,-1947,-1747,-2347}, 4),
+          new Polygon(new int[]{1400,1400,1640,1640}, new int[]{-1267,-1067,-1067,-1267}, 4),
+          new Polygon(new int[]{1400,1760,1960,1960,1640}, new int[]{-1267,-1587,-1587,-1267,-1267}, 5),
+          new Polygon(new int[]{-200,-200,120,120}, new int[]{-1667,-667,-667,-1667}, 4),
+          new Polygon(new int[]{1280,920,1720}, new int[]{-867,-427,-467}, 3),
+          new Polygon(new int[]{800,520,120,120}, new int[]{-707,-427,-427,-667}, 4),
+          new Polygon(new int[]{-200,-200,120,120}, new int[]{-667,-267,-267,-667}, 4),
+          new Polygon(new int[]{-200,-200,1960,1960}, new int[]{-267,13,13,-267}, 4),
+          new Polygon(new int[]{1960,2560,2560,1960}, new int[]{13,13,-267,-267}, 4),
+          new Polygon(new int[]{2040,2200,2080,2200,2120,2480,2560,2560}, new int[]{-267,-547,-667,-827,-947,-1267,-1267,-267}, 8),
+          new Polygon(new int[]{2480,2200,2600,2560}, new int[]{-1267,-1867,-1867,-1267}, 4),
+          new Polygon(new int[]{1680,1640,1720,1840,1800}, new int[]{-2267,-2187,-2107,-2147,-2267}, 5),
+          new Polygon(new int[]{2000,1920,2000,2120,2120}, new int[]{-2387,-2307,-2227,-2267,-2347}, 5),
+          new Polygon(new int[]{1720,1640,1760,1800}, new int[]{-2547,-2427,-2387,-2467}, 4),
+          new Polygon(new int[]{1960,1840,1920,2040}, new int[]{-2667,-2547,-2507,-2667}, 4),
+          new Polygon(new int[]{2160,2320,2360,2200}, new int[]{-2467,-2347,-2427,-2547}, 4),
+          new Polygon(new int[]{2200,2200,2440,2440,2600,2600}, new int[]{-1867,-1867,-2267,-2747,-2747,-1867}, 6),
+          new Polygon(new int[]{1520,3360,5200,6720}, new int[]{-2627,-2227,-2227,-2387}, 4),
+          new Polygon(new int[]{2440,2160,2160,2600,2600}, new int[]{-2747,-2907,-3267,-3427,-2747}, 5),
   };
   private final Polygon[] blinks = {
-          new Polygon(new int[]{362, 550, 550, 362}, new int[]{398, 398, 423, 423}, 4),
+          new Polygon(new int[]{560,800,800,560}, new int[]{-1907,-1907,-1827,-1827}, 4),
+          new Polygon(new int[]{1520,1400,1640,1760}, new int[]{-1907,-1787,-1547,-1627}, 4),
   };
   private final Polygon[] goals = {
-          new Polygon(new int[]{554, 716, 716, 554}, new int[]{840, 840, 948, 948}, 4),
+          new Polygon(new int[]{1520,2600,2160,1840}, new int[]{-3427,-3427,-3267,-3267}, 4),
   };
 
   public static void main(String[] args) {
