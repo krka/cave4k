@@ -75,6 +75,12 @@ public class Main extends JPanel implements KeyListener, WindowListener {
     new Main().run();
   }
 
+  private boolean intersects(Shape a, Shape b) {
+      Area areaA = new Area(a);
+      areaA.intersect(new Area(b));
+      return !areaA.isEmpty();
+  }
+
   private void run() {
     GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     device.setFullScreenWindow(frame);
@@ -208,46 +214,36 @@ public class Main extends JPanel implements KeyListener, WindowListener {
 
       Ellipse2D.Double body = new Ellipse2D.Double(-10 + x, -10 - y, 20, 20);
       for (Polygon p : walls) {
-        Area areaA = new Area(body);
-        areaA.intersect(new Area(p));
-        if (!areaA.isEmpty()) {
+        if (intersects(body, p)) {
             died = true;
         }
       }
       if (blinkVisible) {
         for (Polygon p : blinks) {
-          Area areaA = new Area(body);
-          areaA.intersect(new Area(p));
-          if (!areaA.isEmpty()) {
-            died = true;
+          if (intersects(body, p)) {
+              died = true;
           }
         }
       }
       for (Polygon p : goals) {
-        Area areaA = new Area(body);
-        areaA.intersect(new Area(p));
-        if (!areaA.isEmpty()) {
-          win = true;
+        if (intersects(body, p)) {
+            win = true;
         }
       }
 
       for (int i = 0; i < bulletsX.length; i ++) {
-          Area areaA = new Area(new Ellipse2D.Double(bulletsX[i] - 3, bulletsY[i] - 3, 6, 6));
-          areaA.intersect(new Area(body));
-          if (!areaA.isEmpty()) {
-            died = true;
-            break;
-          }              
+          if (intersects(new Ellipse2D.Double(bulletsX[i] - 3, bulletsY[i] - 3, 6, 6), body)) {
+              died = true;
+              break;
+          }
       }
       for (int i = 0; i < bulletsX.length; i++) {
           for (Polygon p : walls) {
-              Area areaA = new Area(new Ellipse2D.Double(bulletsX[i] - 3, bulletsY[i] - 3, 6, 6));
-              areaA.intersect(new Area(p));
-              if (!areaA.isEmpty()) {
-                bulletsX[i] = null;
-                bulletsY[i] = null;
-                break;
-              }              
+              if (intersects(new Ellipse2D.Double(bulletsX[i] - 3, bulletsY[i] - 3, 6, 6), p)) {
+                  bulletsX[i] = null;
+                  bulletsY[i] = null;
+                  break;
+              }
           }
       }
 
