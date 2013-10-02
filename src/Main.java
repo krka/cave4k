@@ -114,7 +114,7 @@ public class Main extends JPanel implements KeyListener {
       if (!win && !died) {
         speedX += Math.sin(angle) * throttle * delta * ACCEL;
         speedY += Math.cos(angle) * throttle * delta * ACCEL;
-        speedY -= delta * ACCEL / 10;
+        //speedY -= delta * ACCEL / 10; // gravity
         double foo = Math.sqrt(speedX * speedX + speedY * speedY);
         if (foo > MAX_SPEED) {
             speedX = speedX * MAX_SPEED / foo;
@@ -150,6 +150,8 @@ public class Main extends JPanel implements KeyListener {
       boolean blinkVisible = (System.currentTimeMillis() / 1500) % 2 == 0;
       g.translate(width / 2, height / 2);
 
+      g.rotate(-angle);
+
       g.setColor(new Color(240, 240, 240));
       g.translate(-x, y);
       for (Polygon p : walls) {
@@ -182,12 +184,13 @@ public class Main extends JPanel implements KeyListener {
       }
       g.translate(x, -y);
 
+      g.rotate(angle);
+
       Color blue = new Color(0, 0, 250);
       Color cyan = new Color(0, 240, 240);
       Color white = new Color(255, 255, 255);
       g.setPaint(new RadialGradientPaint(0, -10, 30, new float[]{0.2f, 0.7f, 0.8f}, new Color[]{blue, cyan, white}));
       if (!died) {
-        g.rotate(angle);
         Polygon ship = new Polygon(new int[]{0, 15, 0, -15, 0}, new int[]{-20, 20, 10, 20, -20}, 5);
         g.fillPolygon(ship);
         if (!win && throttle > 0) {
@@ -196,7 +199,6 @@ public class Main extends JPanel implements KeyListener {
           g.setColor(throttleColors[color]);
           g.drawPolyline(new int[]{-5, 0, 5}, new int[]{15, 25, 15}, 3);
         }
-        g.rotate(-angle);
       } else {
         g.setColor(red);
         for (int i = 0; i < 3; i++) {
